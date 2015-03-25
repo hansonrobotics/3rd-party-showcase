@@ -15,7 +15,7 @@ def captureface(filename):
 
 
 def identify(probename, directory):
-    gallery = os.listdir(directory)
+    gallery = [f for f in os.listdir(directory) if os.path.splitext(f)[1] == '.template']
     gallery_relative = [os.path.join(directory, file) for file in gallery]
     if len(gallery) == 0:
         return []
@@ -39,7 +39,8 @@ def identify(probename, directory):
     return results
 
 def enroll(filename, directory, name):
-    shutil.copyfile(filename + '.template', os.path.join(directory, name))
+    shutil.copyfile(filename + '.template', os.path.join(directory, name + '.template'))
+    shutil.copyfile(filename + '.jpg', os.path.join(directory, name + '.jpg'))
 
 TEMPORARY_FILE = 'last'
 TEMPLATE_DIR = 'templates'
@@ -55,8 +56,9 @@ if __name__ == '__main__':
             name = input()
             enroll(TEMPORARY_FILE, TEMPLATE_DIR, name)
         elif len(results) == 1:
-            print('Hi {0}!'.format(results[0]['file']))
+            name = os.path.splitext(results[0]['file'])[0]
+            print('Hi {0}!'.format(name))
         else:
-            names = [match['file'] for match in
+            names = [os.path.splitext(match['file'])[0] for match in
                      sorted(results, key=lambda x: x['score'], reverse=True)]
             print('Hi {0}! You look like {1}.'.format(names[0], ', '.join(names[1:])))
