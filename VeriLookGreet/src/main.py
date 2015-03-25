@@ -51,9 +51,12 @@ if __name__ == '__main__':
         print(results, file=sys.stderr)
 
         if len(results) == 0:
-            print("New face. What's your name? ", end='', file=sys.stdout)
+            print("I don't know you. What's your name?", end=' ')
             name = input()
             enroll(TEMPORARY_FILE, TEMPLATE_DIR, name)
+        elif len(results) == 1:
+            print('Hi {0}!'.format(results[0]['file']))
         else:
-            match = max(results, key=lambda x: x['score'])
-            print('Hi {0}!'.format(match['file']))
+            names = [match['file'] for match in
+                     sorted(results, key=lambda x: x['score'], reverse=True)]
+            print('Hi {0}! You look like {1}.'.format(names[0], ', '.join(names[1:])))
