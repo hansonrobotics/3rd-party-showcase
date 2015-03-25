@@ -2,16 +2,21 @@ import sys, os, shutil
 import pexpect
 from time import sleep
 
+class VisionException(Exception):
+    pass
+
 def captureface(filename):
     # Capture face data from camera
-    while True:
-        child = pexpect.spawnu('./EnrollFaceFromCamera {0}.jpg {0}.template'.format(filename))
-        child.logfile = sys.stderr
+    child = pexpect.spawnu('./EnrollFaceFromCamera {0}.jpg {0}.template'.format(filename))
+    child.logfile = sys.stderr
+    i = child.expect(["template saved successfully",
+                      "template extraction failed!biometric status: (\w+)"], timeout=None)
 
-        # Try again if the app failed because of BadExposure or BadSharpness
-        if child.expect(["template saved successfully",
-                         "template extraction failed!biometric status: \w+"] , timeout=None) == 0:
-            break
+    # Raise exception on failure
+    if i > 0:
+        # This status may be either BadExposure or BadSharpness
+        status = child.match.groups()[0]
+        raise VisionException(status)
 
 
 def identify(probename, directory):
@@ -47,10 +52,18 @@ TEMPLATE_DIR = 'templates'
 
 if __name__ == '__main__':
     while True:
-        captureface(TEMPORARY_FILE)
+        # Try and capture face from webcam.
+        try:
+            captureface(TEMPORARY_FILE)
+        except VisionException as e:
+            print("Can't see. {0}.".format(e))
+            continue
+
+        # Try and match among the existing saved faces.
         results = identify(TEMPORARY_FILE, TEMPLATE_DIR)
         print(results, file=sys.stderr)
 
+        # Print the results or ask for a name.
         if len(results) == 0:
             print("I don't know you. What's your name?", end=' ')
             name = input()
