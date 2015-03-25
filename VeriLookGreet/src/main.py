@@ -4,9 +4,15 @@ from time import sleep
 
 def captureface(filename):
     # Capture face data from camera
-    child = pexpect.spawnu('./EnrollFaceFromCamera {0}.jpg {0}.template'.format(filename))
-    child.logfile = sys.stderr
-    child.expect("template saved successfully", timeout=None)
+    while True:
+        child = pexpect.spawnu('./EnrollFaceFromCamera {0}.jpg {0}.template'.format(filename))
+        child.logfile = sys.stderr
+
+        # Try again if the app failed because of BadExposure or BadSharpness
+        if child.expect(["template saved successfully",
+                         "template extraction failed!biometric status: \w+"] , timeout=None) == 0:
+            break
+
 
 def identify(probename, directory):
     gallery = os.listdir(directory)
