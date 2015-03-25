@@ -20,9 +20,13 @@ def captureface(filename):
 
 
 def identify(probename, directory):
-    gallery = [f for f in os.listdir(directory) if os.path.splitext(f)[1] == '.template']
-    gallery_relative = [os.path.join(directory, file) for file in gallery]
-    if len(gallery) == 0:
+    try:
+        gallery = [f for f in os.listdir(directory) if os.path.splitext(f)[1] == '.template']
+        gallery_relative = [os.path.join(directory, file) for file in gallery]
+        if len(gallery) == 0:
+            raise FileNotFoundError
+    except FileNotFoundError:
+        # In case of an unexistant or empty template directory.
         return []
 
     # Spawn VeriLook's 'Identify'.
@@ -44,6 +48,7 @@ def identify(probename, directory):
     return results
 
 def enroll(filename, directory, name):
+    os.makedirs(directory, exist_ok=True)
     shutil.copyfile(filename + '.template', os.path.join(directory, name + '.template'))
     shutil.copyfile(filename + '.jpg', os.path.join(directory, name + '.jpg'))
 
