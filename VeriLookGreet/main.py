@@ -2,12 +2,18 @@ import sys, os, shutil
 import pexpect
 from time import sleep
 
+BIN_DIR = 'build/bin'
+DATA_DIR = 'data'
+
 class VisionException(Exception):
     pass
 
 def captureface(filename):
     # Capture face data from camera
-    child = pexpect.spawnu('./EnrollFaceFromCamera {0}.jpg {0}.template'.format(filename))
+    child = pexpect.spawnu('{0} {1}.jpg {1}.template'.format(
+        os.path.join(BIN_DIR, 'EnrollFaceFromCamera'),
+        filename
+    ))
     child.logfile = sys.stderr
     i = child.expect(["template saved successfully",
                       "template extraction failed!biometric status: (\w+)"], timeout=None)
@@ -30,7 +36,8 @@ def identify(probename, directory):
         return []
 
     # Spawn VeriLook's 'Identify'.
-    child = pexpect.spawnu('./Identify {0}.template {1}'.format(
+    child = pexpect.spawnu('{0} {1}.template {2}'.format(
+        os.path.join(BIN_DIR, 'Identify'),
         probename,
         ' '.join(gallery_relative)
     ))
@@ -52,10 +59,11 @@ def enroll(filename, directory, name):
     shutil.copyfile(filename + '.template', os.path.join(directory, name + '.template'))
     shutil.copyfile(filename + '.jpg', os.path.join(directory, name + '.jpg'))
 
-TEMPORARY_FILE = 'last'
-TEMPLATE_DIR = 'templates'
+TEMPORARY_FILE = os.path.join(DATA_DIR, 'last')
+TEMPLATE_DIR = os.path.join(DATA_DIR, 'templates')
 
 if __name__ == '__main__':
+    os.makedirs(DATA_DIR, exist_ok=True)
     while True:
         # Try and capture face from webcam.
         try:
@@ -66,7 +74,7 @@ if __name__ == '__main__':
 
         # Try and match among the existing saved faces.
         results = identify(TEMPORARY_FILE, TEMPLATE_DIR)
-        print(results, file=sys.stderr)
+        print('Identified {0}'.format(results), file=sys.stderr)
 
         # Print the results or ask for a name.
         if len(results) == 0:
