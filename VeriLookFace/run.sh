@@ -1,4 +1,5 @@
 #!/bin/bash
+#Copyright (c) 2013-2018 Hanson Robotics, Ltd.
 # Would've done a docker image instead, but for some reason the demo can't
 # find the webcam from a docker container, even with /dev/video0 mounted.
 

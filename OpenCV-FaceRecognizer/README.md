@@ -23,3 +23,4 @@ $ dockerX11run --privileged --rm opencv-fr
 
 - **S** - take a snapshot of the visible face.
 - **Q** - exit.
+#####Copyright (c) 2013-2018 Hanson Robotics, Ltd.

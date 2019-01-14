@@ -13,3 +13,4 @@ Neurotechnology's VeriLook Surveillance SDK is designed for developing software 
 ```
 
 **Note:** The Linux version can't find the webcam on some machines. In that case use [the windows version](http://neurotechnology.com/download.html#vl-surveillance).
+#####Copyright (c) 2013-2018 Hanson Robotics, Ltd.

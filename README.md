@@ -5,3 +5,4 @@ A collection of demos that are independent from the rest of Hanson Robotics syst
 ## Usage ##
 
 Pick a folder and see the **README.md** in it.
+#####Copyright (c) 2013-2018 Hanson Robotics, Ltd.

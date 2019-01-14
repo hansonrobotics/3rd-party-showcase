@@ -1,3 +1,4 @@
+#Copyright (c) 2013-2018 Hanson Robotics, Ltd.
 def split(seq, gen):
     """ Split 'seq' at every element that 'gen' yields True to. """
     gen.next() # Get to the first yield in the generator
