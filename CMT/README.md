@@ -40,3 +40,4 @@ Try disabling xserver access control.
 ```bash
 $ xhost +
 ```
+#####Copyright (c) 2013-2018 Hanson Robotics, Ltd.

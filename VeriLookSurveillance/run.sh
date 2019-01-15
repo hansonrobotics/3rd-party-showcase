@@ -1,4 +1,5 @@
 #!/bin/bash
+#Copyright (c) 2013-2018 Hanson Robotics, Ltd.
 
 # Exit if any of the commands fail
 set -e

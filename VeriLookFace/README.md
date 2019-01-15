@@ -13,3 +13,4 @@ Neurotechnology's VeriLook face identification demo can do alive face detection,
 ```
 
 User Interface is self explanatory.
+#####Copyright (c) 2013-2018 Hanson Robotics, Ltd.

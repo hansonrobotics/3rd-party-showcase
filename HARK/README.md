@@ -19,3 +19,4 @@ $ docker build -t hark .
 ```bash
 $ dockerX11run --privileged --rm hark
 ```
+#####Copyright (c) 2013-2018 Hanson Robotics, Ltd.
